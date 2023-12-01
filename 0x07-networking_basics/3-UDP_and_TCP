@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-#TCP
-#UDP
-#TCP
+#TCP It is a protocol that is transferring data in a slow way but surely
+#UDP It is a protocol that is transferring data in a fast way and might loss data along in the process
+#TCP Have you received boxes x, y, z?
 
 1
 2

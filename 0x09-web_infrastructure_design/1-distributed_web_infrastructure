@@ -1,0 +1,7 @@
+A three server web infrastructure that hosts the website www.foobar.com. It covers:
+2 servers
+1 web server (Nginx)
+1 application server
+1 load-balancer (HAproxy)
+1 set of application files (your code base)
+1 database (MySQL)

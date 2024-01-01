@@ -1,0 +1,5 @@
+A three server web infrastructure that hosts the website www.foobar.com that is secured, serve encrypted traffic, and be monitored. It covers:
+3 firewalls
+1 SSL certificate to serve www.foobar.com over HTTPS
+3 monitoring clients (data collector for Sumologic or other monitoring services)
+

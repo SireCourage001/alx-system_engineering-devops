@@ -3,3 +3,4 @@ A three server web infrastructure that hosts the website www.foobar.com that is 
 1 SSL certificate to serve www.foobar.com over HTTPS
 3 monitoring clients (data collector for Sumologic or other monitoring services)
 
+https://docs.google.com/document/d/1gEZS8ZOZg7X77yBWjH8INXERqu-kg6JIcYE8WR0jKlk/edit?usp=sharing

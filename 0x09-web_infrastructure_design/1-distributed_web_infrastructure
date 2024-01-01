@@ -5,3 +5,5 @@ A three server web infrastructure that hosts the website www.foobar.com. It cove
 1 load-balancer (HAproxy)
 1 set of application files (your code base)
 1 database (MySQL)
+
+https://docs.google.com/document/d/1fxovKek5GvKGe6889VzB25Xg8BJTlU3PBcm2PdPQxps/edit?usp=sharing

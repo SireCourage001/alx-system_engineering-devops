@@ -1,8 +1,9 @@
-#Using Puppt to create a file in /tmp
+#Using Puppet to create a file in /tmp
 
-file {"/tmp/school":
+file { "/tmp/school":
 content => "I love Puppet",
 mode => "0744",
 owner   => "www-data",
-group   => "www-data",
+group   => 'www-data',
+content => 'I love Puppet',
 }

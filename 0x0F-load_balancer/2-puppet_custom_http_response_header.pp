@@ -1,30 +1,60 @@
-# Setup New Ubuntu server with nginx
-# and add a custom HTTP header
-
-exec { 'update system':
-        command => '/usr/bin/apt-get update',
+# Install HAProxy package
+package { 'haproxy':
+  ensure => installed,
 }
 
-package { 'nginx':
-	ensure => 'installed',
-	require => Exec['update system']
+# custom configuration for HAProxy
+file { '/etc/haproxy/haproxy_custom.cfg':
+  ensure  => present,
+  content => @("EOF"
+frontend http_front
+    http-response set-header X-Served-By $HOSTNAME
+EOF
+),
+ require => Package['haproxy'],
+  notify  => Service['haproxy'],
 }
 
-file {'/var/www/html/index.html':
-	content => 'Hello World!'
+# Include custom configuration in the HAProxy main configuration file
+exec { 'include_custom_config':
+  command => 'echo "import /etc/haproxy/haproxy_custom.cfg" >> /etc/haproxy/haproxy.cfg',
+  creates => '/etc/haproxy/haproxy_custom.cfg',
+  require => File['/etc/haproxy/haproxy_custom.cfg'],
+  notify  => Service['haproxy'],
 }
 
-exec {'redirect_me':
-	command => 'sed -i "24i\	rewrite ^/redirect_me https://th3-gr00t.tk/ permanent;" /etc/nginx/sites-available/default',
-	provider => 'shell'
+# Enable HAProxy init script
+file { '/etc/default/haproxy':
+  ensure  => present,
+  content => "ENABLED=1",
+  require => Package['haproxy'],
+  notify  => Service['haproxy'],
 }
 
-exec {'HTTP header':
-	command => 'sed -i "25i\	add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default',
-	provider => 'shell'
+# Update /etc/hosts with correct hostnames and IP addresses
+file { '/etc/hosts':
+  content => @("EOF"
+127.0.0.1 localhost
+52.87.229.242 443353-web-01
+52.3.241.114 443353-web-02
+# ... (other existing entries)
+EOF
+),
+  require => Package['haproxy'],
 }
 
-service {'nginx':
-	ensure => running,
-	require => Package['nginx']
+# Validate HAProxy configuration before restart
+exec { 'validate_haproxy_config':
+  command => 'haproxy -c -f /etc/haproxy/haproxy.cfg',
+  path    => '/usr/sbin:/usr/bin:/sbin:/bin',
+  refreshonly => true,
+  subscribe => File['/etc/haproxy/haproxy.cfg'],
+  notify  => Service['haproxy'],
+}
+
+# Restart HAProxy service
+service { 'haproxy':
+  ensure    => running,
+  enable    => true,
+  subscribe => [File['/etc/haproxy/haproxy_custom.cfg'], File['/etc/hosts'], Exec['include_custom_config'], Exec['validate_haproxy_config']],
 }

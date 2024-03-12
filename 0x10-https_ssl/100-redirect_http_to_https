@@ -12,7 +12,6 @@ global
         ca-base /etc/ssl/certs
         crt-base /etc/ssl/private
 
-
 defaults
         log     global
         mode    http
@@ -29,19 +28,21 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-frontend  courage_frontend
+
+frontend  sirecourage_frontend
         bind *:80
         mode http
         bind *:443 ssl crt /etc/haproxy/certs/www.siresystem.tech.pem
         redirect scheme https if !{ ssl_fc }
         default_backend courage_backend
-backend 	courage_backend
+backend         sirecourage_backend
         balance roundrobin
-        server 150802-web-01 52.87.229.242 check
-        server 150802-web-02 52.3.241.114 check
+        server 443353-web-01 52.87.229.242:80 check
+        server 443353-web-02 52.3.241.114:80 check
 
 listen http-in
         bind :80
         balance roundrobin
-        server 150802-web-01 52.87.229.242 check
-        server 150802-web-02 52.3.241.114 check
+        server 443353-web-01 52.87.229.242:80 check
+        server 443353-web-02 52.3.241.114:80 check
+
